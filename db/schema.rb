@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170402015551) do
+ActiveRecord::Schema.define(version: 20170402173855) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,6 +57,14 @@ ActiveRecord::Schema.define(version: 20170402015551) do
     t.datetime "updated_at", null: false
     t.index ["url_id"], name: "index_visits_on_url_id", using: :btree
     t.index ["user_id"], name: "index_visits_on_user_id", using: :btree
+  end
+
+  create_table "votings", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "url_id",  null: false
+    t.integer "score"
+    t.index ["url_id"], name: "index_votings_on_url_id", using: :btree
+    t.index ["user_id"], name: "index_votings_on_user_id", using: :btree
   end
 
 end

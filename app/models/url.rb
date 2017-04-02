@@ -3,12 +3,7 @@ class Url < ActiveRecord::Base
 
   belongs_to :user
 
-  has_many(
-    :visits,
-    :class_name => "Visit",
-    :foreign_key => :url_id,
-    :primary_key => :id
-  )
+  has_many :visits
 
   has_many(
     :visitors,
@@ -24,6 +19,8 @@ class Url < ActiveRecord::Base
     :through => :taggings,
     :source => :tag_topic
   )
+
+  has_many :votings
 
   def self.random_code
     code = SecureRandom::urlsafe_base64
@@ -83,6 +80,24 @@ class Url < ActiveRecord::Base
       end
     end
   end
+
+  def self.top
+    Url.all
+      .select('urls.long_url')
+      .joins(:votings)
+      .group('urls.id')
+      .order('SUM(votings.score) DESC')
+      .limit(1)
+  end
+
+  def self.hot(n)
+    Url
+      .select('urls.long_url')
+      .joins(:votings)
+      .where("votings.created_at > ?", 10.minutes.ago)
+
+  end
+
 
 
 end
